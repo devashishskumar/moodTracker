@@ -156,7 +156,7 @@ export const Settings: React.FC<SettingsProps> = ({ onToggleDarkMode, isDarkMode
         <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
           <p><strong>Version:</strong> 1.0.0</p>
           <p><strong>Total Entries:</strong> {entries.length}</p>
-          <p><strong>Data Storage:</strong> Local Browser Storage</p>
+          <p><strong>Data Storage:</strong> MongoDB</p>
           <p><strong>Last Updated:</strong> {new Date().toLocaleDateString()}</p>
         </div>
       </div>

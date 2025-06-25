@@ -76,6 +76,20 @@ export const MoodAnalytics: React.FC = () => {
     return `${(1/zoomLevel).toFixed(1)}x Zoomed Out`;
   };
 
+  // Custom tooltip for PieChart
+  const PieCustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const { name, value } = payload[0].payload;
+      return (
+        <div style={{ background: '#1f2937', color: '#f9fafb', borderRadius: 8, padding: 12, minWidth: 120, boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}>
+          <div style={{ fontWeight: 600, fontSize: 14 }}>{name.charAt(0).toUpperCase() + name.slice(1)}</div>
+          <div style={{ fontSize: 13 }}>Entries: <span style={{ color: '#fbbf24' }}>{value}</span></div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -277,14 +291,7 @@ export const MoodAnalytics: React.FC = () => {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1f2937', 
-                    border: 'none', 
-                    borderRadius: '8px',
-                    color: '#f9fafb'
-                  }}
-                />
+                <Tooltip content={<PieCustomTooltip />} />
               </PieChart>
             </ResponsiveContainer>
           )}

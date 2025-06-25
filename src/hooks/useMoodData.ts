@@ -1,37 +1,48 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { MoodEntry, MoodType, MoodFilter } from '../types/mood.types';
-import { useLocalStorage } from './useLocalStorage';
 import { calculateMoodAnalytics, generateChartData } from '../utils/moodAnalytics';
 import { formatDate } from '../utils/dateUtils';
+import * as entriesApi from '../api/entriesApi';
 
 export function useMoodData() {
-  const [entries, setEntries] = useLocalStorage<MoodEntry[]>('mood-entries', []);
+  const [entries, setEntries] = useState<MoodEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const addEntry = useCallback((mood: MoodType, note: string, date?: string, intensity?: number) => {
-    const newEntry: MoodEntry = {
-      id: Date.now().toString(),
-      date: date || formatDate(new Date()),
-      mood,
-      note,
-      timestamp: Date.now(),
-      intensity,
-    };
+  // Fetch all entries on mount
+  useEffect(() => {
+    setLoading(true);
+    entriesApi.getEntries()
+      .then(data => {
+        setEntries(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError('Failed to fetch entries');
+        setLoading(false);
+      });
+  }, []);
 
+  const addEntry = useCallback(async (mood: MoodType, note: string, date?: string, intensity?: number, tags?: string[]) => {
+    const formattedDate = formatDate(date || new Date());
+    const newEntry = await entriesApi.addEntry({ mood, note, date: formattedDate, intensity, tags });
     setEntries(prev => [newEntry, ...prev]);
     return newEntry;
-  }, [setEntries]);
+  }, []);
 
-  const updateEntry = useCallback((id: string, updates: Partial<MoodEntry>) => {
-    setEntries(prev => 
-      prev.map(entry => 
-        entry.id === id ? { ...entry, ...updates } : entry
-      )
-    );
-  }, [setEntries]);
+  const updateEntry = useCallback(async (id: string, updates: Partial<MoodEntry>) => {
+    const formattedUpdates = {
+      ...updates,
+      date: updates.date ? formatDate(updates.date) : undefined,
+    };
+    const updated = await entriesApi.updateEntry(id, formattedUpdates);
+    setEntries(prev => prev.map(entry => entry._id === id ? updated : entry));
+  }, []);
 
-  const deleteEntry = useCallback((id: string) => {
-    setEntries(prev => prev.filter(entry => entry.id !== id));
-  }, [setEntries]);
+  const deleteEntry = useCallback(async (id: string) => {
+    await entriesApi.deleteEntry(id);
+    setEntries(prev => prev.filter(entry => entry._id !== id));
+  }, []);
 
   const getEntriesByDate = useCallback((date: string) => {
     return entries.filter(entry => entry.date === date);
@@ -75,13 +86,13 @@ export function useMoodData() {
     return generateChartData(entries, days);
   }, [entries]);
 
+  // Export/import/clear can be left as-is or adapted for server-side if needed
   const exportData = useCallback(() => {
     const data = {
       entries,
       exportDate: new Date().toISOString(),
       version: '1.0.0',
     };
-    
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -104,14 +115,16 @@ export function useMoodData() {
     } catch (error) {
       return { success: false, error: 'Invalid JSON format' };
     }
-  }, [setEntries]);
+  }, []);
 
   const clearAllData = useCallback(() => {
     setEntries([]);
-  }, [setEntries]);
+  }, []);
 
   return {
     entries,
+    loading,
+    error,
     addEntry,
     updateEntry,
     deleteEntry,

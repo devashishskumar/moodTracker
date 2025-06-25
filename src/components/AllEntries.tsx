@@ -32,7 +32,7 @@ const AllEntries: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
 
   const startEdit = (entry: any) => {
-    setEditingId(entry.id);
+    setEditingId(entry._id);
     setEditData({ ...entry });
     setShowModal(true);
   };
@@ -85,7 +85,7 @@ const AllEntries: React.FC = () => {
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               {sortedEntries.map(entry => (
-                <tr key={entry.id}>
+                <tr key={entry._id}>
                   <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-white">{formatDateDisplay(entry.date)}</td>
                   <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-white">{entry.timestamp ? new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '-'}</td>
                   <td className="px-4 py-2 whitespace-nowrap">

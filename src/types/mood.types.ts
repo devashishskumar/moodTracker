@@ -1,7 +1,8 @@
 export type MoodType = 'happy' | 'sad' | 'anxious' | 'excited' | 'calm' | 'angry' | 'neutral';
 
 export interface MoodEntry {
-  id: string;
+  _id?: string; // MongoDB document id
+  id?: string; // legacy/local id
   date: string;
   mood: MoodType;
   note: string;
