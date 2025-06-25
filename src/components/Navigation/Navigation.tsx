@@ -6,7 +6,8 @@ import {
   BarChart3, 
   Settings, 
   Sun, 
-  Moon 
+  Moon,
+  List
 } from 'lucide-react';
 
 interface NavigationProps {
@@ -17,6 +18,7 @@ interface NavigationProps {
 
 const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: Home },
+  { id: 'all-entries', label: 'All Entries', icon: List },
   { id: 'entry', label: 'Add Entry', icon: Plus },
   { id: 'calendar', label: 'Calendar', icon: Calendar },
   { id: 'analytics', label: 'Analytics', icon: BarChart3 },
@@ -28,6 +30,11 @@ export const Navigation: React.FC<NavigationProps> = ({
   onViewChange, 
   isDarkMode 
 }) => {
+  const handleDarkModeToggle = () => {
+    const event = new CustomEvent('toggleDarkMode');
+    window.dispatchEvent(event);
+  };
+
   return (
     <nav className="w-64 bg-white dark:bg-gray-800 shadow-lg border-r border-gray-200 dark:border-gray-700">
       <div className="p-6">
@@ -73,11 +80,7 @@ export const Navigation: React.FC<NavigationProps> = ({
               Theme
             </span>
             <button
-              onClick={() => {
-                // This will be handled by the parent component
-                const event = new CustomEvent('toggleDarkMode');
-                window.dispatchEvent(event);
-              }}
+              onClick={handleDarkModeToggle}
               className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
             >
               {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}

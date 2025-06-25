@@ -7,7 +7,9 @@ export const Dashboard: React.FC = () => {
   const { entries, getAnalytics } = useMoodDataContext();
   const analytics = getAnalytics();
 
-  const recentEntries = entries.slice(0, 5);
+  const recentEntries = [...entries]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 5);
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
@@ -160,7 +162,10 @@ export const Dashboard: React.FC = () => {
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {formatDateDisplay(entry.date)}
+                      {formatDateDisplay(entry.date)}{' '}
+                      {entry.timestamp && (
+                        <span className="ml-1">{new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                      )}
                     </p>
                   </div>
                 </div>

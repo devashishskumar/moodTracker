@@ -55,7 +55,7 @@ export const calculateMoodAnalytics = (entries: MoodEntry[]): MoodAnalytics => {
     else if (recentAvg < olderAvg - 1) moodTrend = 'declining';
   }
 
-  // Calculate streak
+  // Calculate streak - look for consecutive days with entries
   const streakDays = calculateStreakDays(sortedEntries);
 
   return {
@@ -73,21 +73,24 @@ export const calculateStreakDays = (entries: MoodEntry[]): number => {
   if (entries.length === 0) return 0;
 
   const sortedEntries = [...entries].sort((a, b) => b.timestamp - a.timestamp);
-  const today = new Date();
-  let streak = 0;
-  let currentDate = new Date();
+  
+  // Get unique dates from entries
+  const uniqueDates = [...new Set(sortedEntries.map(entry => entry.date))].sort().reverse();
+  
+  if (uniqueDates.length === 0) return 0;
 
-  for (let i = 0; i < 365; i++) { // Check up to a year
+  let streak = 0;
+  let currentDate = new Date(uniqueDates[0]); // Start from the most recent entry date
+
+  for (let i = 0; i < uniqueDates.length; i++) {
     const dateStr = formatDate(currentDate);
-    const hasEntry = sortedEntries.some(entry => entry.date === dateStr);
     
-    if (hasEntry) {
+    if (uniqueDates.includes(dateStr)) {
       streak++;
+      currentDate.setDate(currentDate.getDate() - 1); // Move to previous day
     } else {
-      break;
+      break; // Streak broken
     }
-    
-    currentDate.setDate(currentDate.getDate() - 1);
   }
 
   return streak;
@@ -96,6 +99,23 @@ export const calculateStreakDays = (entries: MoodEntry[]): number => {
 export const generateChartData = (entries: MoodEntry[], days: number = 30): ChartDataPoint[] => {
   const chartData: ChartDataPoint[] = [];
   const sortedEntries = [...entries].sort((a, b) => a.timestamp - b.timestamp);
+  
+  if (sortedEntries.length === 0) {
+    // Return empty data for the requested number of days
+    const endDate = new Date();
+    for (let i = days - 1; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      const dateStr = formatDate(date);
+      
+      chartData.push({
+        date: dateStr,
+        mood: 'neutral',
+        value: 0,
+      });
+    }
+    return chartData;
+  }
   
   // Group entries by date
   const entriesByDate = new Map<string, MoodEntry[]>();
@@ -106,7 +126,7 @@ export const generateChartData = (entries: MoodEntry[], days: number = 30): Char
     entriesByDate.get(entry.date)!.push(entry);
   });
 
-  // Generate data points for the last N days
+  // Generate data points for the last N days from today
   const endDate = new Date();
   for (let i = days - 1; i >= 0; i--) {
     const date = new Date();

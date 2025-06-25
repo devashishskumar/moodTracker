@@ -70,10 +70,12 @@ export const MoodCalendar: React.FC = () => {
             )}
           </div>
           {dayEntries.length > 0 && (
-            <div className="mt-1">
-              <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
-                {dayEntries[0].note}
-              </p>
+            <div className="mt-1 space-y-1">
+              {dayEntries.map((entry, idx) => (
+                <p key={idx} className="text-xs text-gray-600 dark:text-gray-400 truncate">
+                  {entry.note}
+                </p>
+              ))}
             </div>
           )}
         </div>

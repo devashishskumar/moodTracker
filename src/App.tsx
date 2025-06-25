@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navigation } from './components/Navigation/Navigation';
 import { Dashboard } from './components/Dashboard/Dashboard';
 import { MoodEntry } from './components/MoodEntry/MoodEntry';
@@ -6,9 +6,10 @@ import { MoodCalendar } from './components/MoodCalendar/MoodCalendar';
 import { MoodAnalytics } from './components/MoodAnalytics/MoodAnalytics';
 import { Settings } from './components/Settings/Settings';
 import { MoodDataProvider } from './context/MoodDataContext';
+import AllEntries from './components/AllEntries';
 import './App.css';
 
-type View = 'dashboard' | 'entry' | 'calendar' | 'analytics' | 'settings';
+type View = 'dashboard' | 'all-entries' | 'entry' | 'calendar' | 'analytics' | 'settings';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
@@ -22,10 +23,25 @@ function App() {
     localStorage.setItem('dark-mode', JSON.stringify(!isDarkMode));
   };
 
+  // Listen for dark mode toggle events from Navigation
+  useEffect(() => {
+    const handleDarkModeToggle = () => {
+      toggleDarkMode();
+    };
+
+    window.addEventListener('toggleDarkMode', handleDarkModeToggle);
+    
+    return () => {
+      window.removeEventListener('toggleDarkMode', handleDarkModeToggle);
+    };
+  }, [isDarkMode]);
+
   const renderView = () => {
     switch (currentView) {
       case 'dashboard':
         return <Dashboard />;
+      case 'all-entries':
+        return <AllEntries />;
       case 'entry':
         return <MoodEntry />;
       case 'calendar':
