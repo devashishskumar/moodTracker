@@ -1,0 +1,111 @@
+{
+  "exportInfo": {
+    "exportDate": "2025-06-26T00:30:00.000Z",
+    "exportedBy": "admin (admin@moodtracker.com) - Admin",
+    "totalEntries": 5,
+    "totalUsers": 2,
+    "version": "1.0.0",
+    "exportType": "admin-full-export"
+  },
+  "users": [
+    {
+      "user": {
+        "_id": "507f1f77bcf86cd799439011",
+        "username": "admin",
+        "email": "admin@moodtracker.com",
+        "role": "admin",
+        "createdAt": "2025-06-25T10:00:00.000Z"
+      },
+      "entries": [
+        {
+          "_id": "507f1f77bcf86cd799439012",
+          "date": "2025-06-25",
+          "mood": "happy",
+          "note": "Great day at work!",
+          "timestamp": 1719331200000,
+          "intensity": 8,
+          "tags": ["work", "success"]
+        },
+        {
+          "_id": "507f1f77bcf86cd799439013",
+          "date": "2025-06-26",
+          "mood": "calm",
+          "note": "Peaceful morning routine",
+          "timestamp": 1719417600000,
+          "intensity": 7,
+          "tags": ["morning", "routine"]
+        }
+      ]
+    },
+    {
+      "user": {
+        "_id": "507f1f77bcf86cd799439014",
+        "username": "john_doe",
+        "email": "john@example.com",
+        "role": "user",
+        "createdAt": "2025-06-25T14:00:00.000Z"
+      },
+      "entries": [
+        {
+          "_id": "507f1f77bcf86cd799439015",
+          "date": "2025-06-25",
+          "mood": "excited",
+          "note": "Got a new job offer!",
+          "timestamp": 1719345600000,
+          "intensity": 9,
+          "tags": ["career", "opportunity"]
+        },
+        {
+          "_id": "507f1f77bcf86cd799439016",
+          "date": "2025-06-26",
+          "mood": "anxious",
+          "note": "Preparing for the interview",
+          "timestamp": 1719424000000,
+          "intensity": 6,
+          "tags": ["interview", "preparation"]
+        },
+        {
+          "_id": "507f1f77bcf86cd799439017",
+          "date": "2025-06-26",
+          "mood": "happy",
+          "note": "Interview went well!",
+          "timestamp": 1719456000000,
+          "intensity": 8,
+          "tags": ["interview", "success"]
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "totalEntries": 5,
+    "totalUsers": 2,
+    "dateRange": {
+      "earliest": 1719331200000,
+      "latest": 1719456000000
+    },
+    "moodDistribution": {
+      "happy": 3,
+      "calm": 1,
+      "excited": 1,
+      "anxious": 1
+    },
+    "userStats": [
+      {
+        "_id": "507f1f77bcf86cd799439011",
+        "username": "admin",
+        "email": "admin@moodtracker.com",
+        "role": "admin",
+        "entryCount": 2,
+        "createdAt": "2025-06-25T10:00:00.000Z"
+      },
+      {
+        "_id": "507f1f77bcf86cd799439014",
+        "username": "john_doe",
+        "email": "john@example.com",
+        "role": "user",
+        "entryCount": 3,
+        "createdAt": "2025-06-25T14:00:00.000Z"
+      }
+    ]
+  }
+} 

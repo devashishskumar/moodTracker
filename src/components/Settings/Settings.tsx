@@ -11,21 +11,33 @@ export const Settings: React.FC<SettingsProps> = ({ onToggleDarkMode, isDarkMode
   const { exportData, importData, clearAllData, entries } = useMoodDataContext();
   const [importFile, setImportFile] = useState<File | null>(null);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
 
   const handleImport = async () => {
     if (!importFile) return;
 
+    setIsImporting(true);
     const reader = new FileReader();
-    reader.onload = (e) => {
-      const result = e.target?.result as string;
-      const importResult = importData(result);
-      
-      if (importResult.success) {
-        alert(`Successfully imported ${importResult.count} entries!`);
-        setImportFile(null);
-      } else {
-        alert(`Import failed: ${importResult.error}`);
+    reader.onload = async (e) => {
+      try {
+        const result = e.target?.result as string;
+        const importResult = await importData(result);
+        
+        if (importResult.success) {
+          alert(importResult.message || `Successfully imported ${importResult.count} entries!`);
+          setImportFile(null);
+        } else {
+          alert(`Import failed: ${importResult.error}`);
+        }
+      } catch (error) {
+        alert(`Import failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      } finally {
+        setIsImporting(false);
       }
+    };
+    reader.onerror = () => {
+      alert('Failed to read the file');
+      setIsImporting(false);
     };
     reader.readAsText(importFile);
   };
@@ -81,7 +93,7 @@ export const Settings: React.FC<SettingsProps> = ({ onToggleDarkMode, isDarkMode
             <div>
               <p className="font-medium text-gray-900 dark:text-white">Export Data</p>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Download your mood entries as JSON
+                Download your mood entries as JSON with user information
               </p>
             </div>
             <button
@@ -99,7 +111,7 @@ export const Settings: React.FC<SettingsProps> = ({ onToggleDarkMode, isDarkMode
             <div>
               <p className="font-medium text-gray-900 dark:text-white">Import Data</p>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Import mood entries from JSON file
+                Import mood entries from JSON file (supports old and new formats)
               </p>
             </div>
             <div className="flex items-center space-x-2">
@@ -120,9 +132,10 @@ export const Settings: React.FC<SettingsProps> = ({ onToggleDarkMode, isDarkMode
               {importFile && (
                 <button
                   onClick={handleImport}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                  disabled={isImporting}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
                 >
-                  Import
+                  {isImporting ? 'Importing...' : 'Import'}
                 </button>
               )}
             </div>

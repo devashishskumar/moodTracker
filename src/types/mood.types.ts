@@ -1,5 +1,12 @@
 export type MoodType = 'happy' | 'sad' | 'anxious' | 'excited' | 'calm' | 'angry' | 'neutral';
 
+export interface User {
+  _id: string;
+  username: string;
+  email: string;
+  role: 'user' | 'admin';
+}
+
 export interface MoodEntry {
   _id?: string; // MongoDB document id
   id?: string; // legacy/local id
@@ -9,6 +16,7 @@ export interface MoodEntry {
   timestamp: number;
   intensity?: number; // 1-10 scale
   tags?: string[];
+  user?: User; // User information (populated from backend)
 }
 
 export interface MoodAnalytics {

@@ -8,7 +8,10 @@ app.use(cors());
 app.use(express.json());
 
 const entriesRouter = require('./routes/entries');
+const authRouter = require('./routes/auth');
+
 app.use('/api/entries', entriesRouter);
+app.use('/api/auth', authRouter);
 
 app.get('/test', (req, res) => {
   res.json({ message: 'Test route works!' });
