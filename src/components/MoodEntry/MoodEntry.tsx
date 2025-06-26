@@ -137,10 +137,10 @@ export const MoodEntry: React.FC = () => {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Mood Selection */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+          <label htmlFor="mood-selection" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
             Select your mood
           </label>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div id="mood-selection" className="grid grid-cols-2 md:grid-cols-4 gap-4" role="group" aria-labelledby="mood-selection">
             {moodOptions.map((mood) => {
               const Icon = mood.icon;
               const isSelected = selectedMood === mood.value;
@@ -155,6 +155,7 @@ export const MoodEntry: React.FC = () => {
                       ? `${mood.color} border-transparent text-white shadow-lg transform scale-105`
                       : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
                   }`}
+                  aria-pressed={isSelected}
                 >
                   <div className="flex flex-col items-center space-y-2">
                     <Icon size={24} />
@@ -182,11 +183,12 @@ export const MoodEntry: React.FC = () => {
 
         {/* Intensity Slider */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label htmlFor="intensity" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Intensity: {intensity}/10
           </label>
           <input
             type="range"
+            id="intensity"
             min="1"
             max="10"
             value={intensity}

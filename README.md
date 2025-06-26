@@ -124,31 +124,6 @@ To see the app in action with sample data:
 3. Select the sample data file
 4. Explore all features with realistic mood entries
 
-## �� Project Structure
-
-```
-moodTracker/
-├── src/                     # Frontend React application
-│   ├── components/          # React components
-│   │   ├── Dashboard/       # Main dashboard view
-│   │   ├── MoodEntry/       # Mood logging form
-│   │   ├── MoodCalendar/    # Calendar view with modal
-│   │   ├── MoodAnalytics/   # Analytics and charts
-│   │   ├── Navigation/      # Side navigation
-│   │   └── Settings/        # App settings
-│   ├── context/             # React context providers
-│   ├── hooks/               # Custom React hooks
-│   ├── api/                 # API integration layer
-│   ├── types/               # TypeScript type definitions
-│   └── utils/               # Utility functions
-├── server/                  # Backend Node.js application
-│   ├── models/              # Mongoose schemas
-│   ├── routes/              # Express routes
-│   └── index.js             # Server entry point
-├── public/                  # Static assets
-└── sample-mood-data.json    # Sample data for testing
-```
-
 ## 🔧 API Endpoints
 
 The backend provides the following REST API endpoints:
@@ -236,5 +211,4 @@ If you have any questions or need help, please open an issue on GitHub.
 
 ---
 
-**Made with ❤️ for better mental health tracking** 
 **Made with ❤️ for better mental health tracking** 
